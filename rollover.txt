@@ -1,0 +1,7 @@
+pre-publication of new ZSK : SOA expiry time of 14 days + zone transfer time of < 1 day
+
+post-publication of old ZSK: (expiration period of 21 days – refresh period of 16 days)
+                             + SOA expiry time of 14 days + zone transfer time of < 1 day
+
+dnssec-settime -I +1299600 -D +3024000 Kexample.com.+008+51498.key
+dnssec-keygen -i 1296000 -S Kexample.com.+008+51498.key
