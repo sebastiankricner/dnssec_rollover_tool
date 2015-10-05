@@ -273,7 +273,7 @@ class DNSSECRollover():
                     '-I', '+' + str(int(prepublish_time.total_seconds())),
                     '-D', '+' + str(int(postpublish_time.total_seconds())),
                     self.dnssec_keys_filtered_sorted[-1].keyfile,
-                ], stdout=DEVNULL, stderr=DEVNULL):
+                ]):
                 if not call([
                                 'dnssec-keygen',
                                 '-b',
@@ -285,7 +285,7 @@ class DNSSECRollover():
                                 self.dnssec_keys_filtered_sorted[-1].keyfile,
                                 '-i',
                                 str(int(prepublish_interval.total_seconds())),
-                            ], stdout=DEVNULL, stderr=DEVNULL):
+                            ], stderr=DEVNULL):
                     return
             call([
                     'dnssec-settime',
@@ -294,7 +294,7 @@ class DNSSECRollover():
                     '-D',
                     'none',
                     self.dnssec_keys_filtered_sorted[-1].keyfile,
-                ], stdout=DEVNULL, stderr=DEVNULL)
+                ], stderr=DEVNULL)
         elif self.keytype == 'key':
             try:
                 newkey = check_output([
@@ -362,7 +362,7 @@ class DNSSECRollover():
                             '+' + str(
                                     int(postpublish_interval.total_seconds())),
                             dnssec_key.keyfile,
-                        ], stdout=DEVNULL, stderr=DEVNULL)
+                        ], stderr=DEVNULL)
     def check_ksk_ds_email(self):
         '''If DS of latest published KSK or active KSK
         is not in DNS, send a E-Mail.'''
@@ -422,7 +422,7 @@ class DNSSECRollover():
                 '/usr/sbin/sendmail',
                 '-t',
                 '-oi'
-            ], stdin = PIPE, stdout=DEVNULL, stderr=None)
+            ], stdin = PIPE, stderr=DEVNULL)
         sendmail.communicate(bytes(msg.as_string(), 'utf-8'))
     def filter_sort_keys(self, status = 'activated'):
         '''Filter and sort keys'''
