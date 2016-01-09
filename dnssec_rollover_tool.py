@@ -276,8 +276,8 @@ class DNSSECRollover():
                 ]):
                 if not call([
                                 'dnssec-keygen',
-                                '-b',
-                                '1024',
+                                #'-b',
+                                #'1024',
                                 '-K',
                                 os.path.dirname(
                                 self.dnssec_keys_filtered_sorted[-1].keyfile),
@@ -443,7 +443,10 @@ class DNSSECRollover():
         '''Calculate pre/post publication time'''
         dnssec_keys = [x for x in self.dnssec_keys
                 if x.keytype == self.keytype]
-        soa_refresh, soa_retry, soa_expire = dnssec_keys[-1].get_soa_params()
+        try:
+            soa_refresh, soa_retry, soa_expire = dnssec_keys[-1].get_soa_params()
+        except TypeError as e:
+            return
         ds_ttl = 0
         if wanted == 'pre_publish':
             if calculate_timeoffset:
