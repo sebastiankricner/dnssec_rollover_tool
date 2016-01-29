@@ -274,10 +274,9 @@ class DNSSECRollover():
                     '-D', '+' + str(int(postpublish_time.total_seconds())),
                     self.dnssec_keys_filtered_sorted[-1].keyfile,
                 ]):
-                if not call([
+                try:
+                    newkey = check_output([
                                 'dnssec-keygen',
-                                #'-b',
-                                #'1024',
                                 '-K',
                                 os.path.dirname(
                                 self.dnssec_keys_filtered_sorted[-1].keyfile),
@@ -285,16 +284,35 @@ class DNSSECRollover():
                                 self.dnssec_keys_filtered_sorted[-1].keyfile,
                                 '-i',
                                 str(int(prepublish_interval.total_seconds())),
-                            ], stderr=DEVNULL):
-                    return
-            call([
-                    'dnssec-settime',
-                    '-I',
-                    'none',
-                    '-D',
-                    'none',
-                    self.dnssec_keys_filtered_sorted[-1].keyfile,
-                ], stderr=DEVNULL)
+                            ], stderr=DEVNULL)
+                    if newkey:
+                        newkey = newkey.decode(
+                                    locale.getpreferredencoding(False)
+                                ).strip()
+                        newkey_file = os.path.join(
+                            os.path.dirname(
+                                self.dnssec_keys_filtered_sorted[-1].keyfile),
+                                newkey + '.key')
+                        if os.path.isfile(newkey_file):
+                            self.dnssec_keys.append(DNSSECKey(newkey_file))
+                            return
+                    call([
+                            'dnssec-settime',
+                            '-I',
+                            'none',
+                            '-D',
+                            'none',
+                            self.dnssec_keys_filtered_sorted[-1].keyfile,
+                        ], stderr=DEVNULL)
+                except CalledProcessError:
+                    call([
+                            'dnssec-settime',
+                            '-I',
+                            'none',
+                            '-D',
+                            'none',
+                            self.dnssec_keys_filtered_sorted[-1].keyfile,
+                        ], stderr=DEVNULL)
         elif self.keytype == 'key':
             try:
                 newkey = check_output([
