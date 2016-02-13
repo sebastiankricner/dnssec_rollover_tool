@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 # vim: set fileencoding=utf-8
 '''Tool to print metadata of DNSSEC keys and perform key rollovers.
