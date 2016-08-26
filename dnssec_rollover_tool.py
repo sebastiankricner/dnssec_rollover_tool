@@ -288,6 +288,7 @@ class DNSSECRollover():
                     '-I', '+' + str(int(prepublish_time.total_seconds())),
                     '-D', '+' + str(int(postpublish_time.total_seconds())),
                     self.dnssec_keys_filtered_sorted[-1].keyfile,
+                    stdout=DEVNULL, stderr=DEVNULL,
                 ]):
                 try:
                     newkey = check_output([
@@ -318,7 +319,7 @@ class DNSSECRollover():
                             '-D',
                             'none',
                             self.dnssec_keys_filtered_sorted[-1].keyfile,
-                        ], stderr=DEVNULL)
+                        ], stdout=DEVNULL, stderr=DEVNULL)
                 except CalledProcessError:
                     call([
                             'dnssec-settime',
@@ -327,7 +328,7 @@ class DNSSECRollover():
                             '-D',
                             'none',
                             self.dnssec_keys_filtered_sorted[-1].keyfile,
-                        ], stderr=DEVNULL)
+                        ], stdout=DEVNULL, stderr=DEVNULL)
         elif self.keytype == 'key':
             try:
                 newkey = check_output([
@@ -395,7 +396,7 @@ class DNSSECRollover():
                             '+' + str(
                                     int(postpublish_interval.total_seconds())),
                             dnssec_key.keyfile,
-                        ], stderr=DEVNULL)
+                        ], stdout=DEVNULL, stderr=DEVNULL)
     def check_ksk_ds_email(self):
         '''If DS of latest published KSK or active KSK
         is not in DNS, send a E-Mail.'''
