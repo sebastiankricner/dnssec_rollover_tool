@@ -288,8 +288,7 @@ class DNSSECRollover():
                     '-I', '+' + str(int(prepublish_time.total_seconds())),
                     '-D', '+' + str(int(postpublish_time.total_seconds())),
                     self.dnssec_keys_filtered_sorted[-1].keyfile,
-                    stdout=DEVNULL, stderr=DEVNULL,
-                ]):
+                ], stdout=DEVNULL, stderr=DEVNULL):
                 try:
                     newkey = check_output([
                                 'dnssec-keygen',
