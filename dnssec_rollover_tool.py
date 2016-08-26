@@ -33,17 +33,30 @@ from pwd import getpwnam
 
 class DNSSECKey:
     '''DNSSEC key object'''
-    created  = None
-    publish  = None
-    activate = None
-    revoke   = None
-    inactive = None
-    delete   = None
-    keyfile  = None
-    keytype  = None
-    keyid    = None
-    key_name = None
-    ds_ttl   = None
+    created        = None
+    publish        = None
+    activate       = None
+    revoke         = None
+    inactive       = None
+    delete         = None
+    keyfile        = None
+    privatekeyfile = None
+    keytype        = None
+    keyid          = None
+    key_name       = None
+    ds_ttl         = None
+
+    @staticmethod
+    def rreplace(s, old, new, occurence):
+        li = s.rsplit(old, occurence)
+        return new.join(li)
+
+    @property
+    def privatekeyfile(self):
+        privatekeyfile = self.rreplace(self.keyfile, '.key', '.private', 1)
+        if os.path.isfile(privatekeyfile):
+            return privatekeyfile
+
     def __init__(self, keyfile):
         self.keyfile = str(keyfile)
         self._readkey()
@@ -197,6 +210,7 @@ class DNSSECKey:
         '''Return human readable key representation'''
         dsfromkey = self.dsfromkey()
         return 'F:'  ' {0.keyfile}\n'  \
+               'PF:' ' {0.privatekeyfile}\n' \
                'N:'  ' {0.key_name} '  \
                'ID:' ' {0.keyid} '    \
                'T:'  ' {0.keytype}\n'  \
@@ -218,6 +232,7 @@ class DNSSECRollover():
     '''Object to handle DNSSEC key rollovers'''
     dnssec_keys = []
     dnssec_keys_filtered_sorted = []
+
     def __init__(
         self,
         keytype,
@@ -353,9 +368,9 @@ class DNSSECRollover():
                 getpwnam(self.keyfileowner).pw_uid,
                 getpwnam(self.keyfileowner).pw_gid
             )
-            if os.path.isfile(dnssec_key.keyfile.replace('.key', '.private')):
+            if dnssec_key.privatekeyfile:
                 os.chown(
-                    dnssec_key.keyfile.replace('.key', '.private'),
+                    dnssec_key.privatekeyfile,
                     getpwnam(self.keyfileowner).pw_uid,
                     getpwnam(self.keyfileowner).pw_gid
                 )
@@ -410,10 +425,8 @@ class DNSSECRollover():
                     ]
             for dnssec_key in dnssec_keys_without_ds:
                 os.unlink(dnssec_key.keyfile)
-                if os.path.isfile(
-                        dnssec_key.keyfile.replace('.key', '.private')
-                        ):
-                    os.unlink(dnssec_key.keyfile.replace('.key', '.private'))
+                if dnssec_key.privatekeyfile:
+                    os.unlink(dnssec_key.privatekeyfile)
             for dnssec_key in dnssec_keys_with_ds:
                 self.send_email(
                         'DS record removal required',
@@ -425,10 +438,8 @@ class DNSSECRollover():
         elif self.keytype == 'zone':
             for dnssec_key in dnssec_keys:
                 os.unlink(dnssec_key.keyfile)
-                if os.path.isfile(
-                        dnssec_key.keyfile.replace('.key', '.private')
-                        ):
-                    os.unlink(dnssec_key.keyfile.replace('.key', '.private'))
+                if dnssec_key.privatekeyfile:
+                    os.unlink(dnssec_key.privatekeyfile)
     def send_email(self, subject, message):
         '''Send notification E-Mail'''
         msg = MIMEText(message)
@@ -548,7 +559,7 @@ if __name__ == '__main__':
     parser.add_argument(
         '-r',
         '--rules',
-        help='File containing rullover rules.',
+        help='File containing rollover rules.',
         type=str
     )
     parser.add_argument(
