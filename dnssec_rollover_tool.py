@@ -7,7 +7,7 @@ This tool is intended to help system administrators on DNSSEC key
 rollovers. It can display the metadata of the keys for a zone and also
 perform rollovers. Rollovers will be performed using the metadata of keys.
 So it is intended to be used with the 'auto-dnssec maintain' statement for
-BIND9.7+.
+BIND9.7+. It is preferably used with BIND inline-signing.
 '''
 
 __author__     = 'Sebastian Kricner'
