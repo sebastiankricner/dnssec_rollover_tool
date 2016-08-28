@@ -121,7 +121,7 @@ class DNSSECKey:
             return "activated"
         if self.publish and self.publish < current_time:
             return "published"
-        if self.publish and self.publish < current_time:
+        if self.created and self.created < current_time:
             return "created"
     def dsfromkey(self):
         '''Get DS from key'''
