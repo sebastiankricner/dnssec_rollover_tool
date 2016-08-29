@@ -613,7 +613,7 @@ if __name__ == '__main__':
 
     if(args.zskroll):
         if not(args.owner):
-            error('No key file owner specified.')
+            error('No key file owner specified')
         dnssec_rollover = DNSSECRollover(
             'zone',
             args.zskroll[0],
@@ -627,7 +627,7 @@ if __name__ == '__main__':
         if not(args.email):
             error('No e-mail addresses specified')
         if not(args.owner):
-            error('No key file owner specified.')
+            error('No key file owner specified')
         dnssec_rollover = DNSSECRollover(
             'key',
             args.kskroll[0],
