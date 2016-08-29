@@ -25,8 +25,14 @@ import re
 from pathlib import Path
 from datetime import datetime, timedelta
 import locale
-from subprocess import (call, check_output, Popen, PIPE, DEVNULL,
-        CalledProcessError)
+from subprocess import (
+    call,
+    check_output,
+    Popen,
+    PIPE,
+    DEVNULL,
+    CalledProcessError
+)
 from email.mime.text import MIMEText
 from pwd import getpwnam
 
