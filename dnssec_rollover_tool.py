@@ -519,9 +519,10 @@ def error(message, exitcode = None):
     '''Print error message and exit'''
     if exitcode:
         print("[error]: "+message+': '+os.strerror(exitcode), file=sys.stderr)
+        sys.exit(exitcode)
     else:
         print("[error]: "+message, file=sys.stderr)
-    sys.exit(exitcode)
+    sys.exit(1)
 
 def getkeys(path, zone):
     '''List of valid keys related to a zone from directory'''
@@ -613,7 +614,6 @@ if __name__ == '__main__':
     if(args.zskroll):
         if not(args.owner):
             error('No key file owner specified.')
-            sys.exit(1)
         dnssec_rollover = DNSSECRollover(
             'zone',
             args.zskroll[0],
@@ -626,10 +626,8 @@ if __name__ == '__main__':
     if(args.kskroll):
         if not(args.email):
             error('No e-mail addresses specified')
-            sys.exit(1)
         if not(args.owner):
             error('No key file owner specified.')
-            sys.exit(1)
         dnssec_rollover = DNSSECRollover(
             'key',
             args.kskroll[0],
