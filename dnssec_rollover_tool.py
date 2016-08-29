@@ -508,13 +508,19 @@ class DNSSECRollover():
                         self.resign_interval +
                         ds_ttl)
 
-def warning(messageprefix, exitcode):
+def warning(message, exitcode = None):
     '''Print warning message'''
-    print("[warning]: "+messageprefix+os.strerror(exitcode))
+    if exitcode:
+        print("[warning]: "+message+': '+os.strerror(exitcode), file=sys.stderr)
+    else:
+        print("[warning]: "+message, file=sys.stderr)
 
-def error(messageprefix, exitcode):
+def error(message, exitcode = None):
     '''Print error message and exit'''
-    print("[error]: "+messageprefix+os.strerror(exitcode))
+    if exitcode:
+        print("[error]: "+message+': '+os.strerror(exitcode), file=sys.stderr)
+    else:
+        print("[error]: "+message, file=sys.stderr)
     sys.exit(exitcode)
 
 def getkeys(path, zone):
@@ -524,7 +530,7 @@ def getkeys(path, zone):
     dnssec_keys = []
     if not keyfiles:
         error(
-            "Unable to get keys for zone "+zone+" in directory '"+path+"': ",
+            "Unable to get keys for zone "+zone+" in directory '"+path+"'",
             errno.ENOENT
         )
     for keyfile in keyfiles:
@@ -606,7 +612,7 @@ if __name__ == '__main__':
 
     if(args.zskroll):
         if not(args.owner):
-            print('[error]: No key file owner specified.', file=sys.stderr)
+            error('No key file owner specified.')
             sys.exit(1)
         dnssec_rollover = DNSSECRollover(
             'zone',
@@ -619,10 +625,10 @@ if __name__ == '__main__':
 
     if(args.kskroll):
         if not(args.email):
-            print('[error]: No e-mail addresses specified', file=sys.stderr)
+            error('No e-mail addresses specified')
             sys.exit(1)
         if not(args.owner):
-            print('[error]: No key file owner specified.', file=sys.stderr)
+            error('No key file owner specified.')
             sys.exit(1)
         dnssec_rollover = DNSSECRollover(
             'key',
