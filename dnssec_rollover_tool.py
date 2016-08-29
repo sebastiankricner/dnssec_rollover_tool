@@ -569,12 +569,6 @@ if __name__ == '__main__':
         required=True
     )
     parser.add_argument(
-        '-r',
-        '--rules',
-        help='File containing rollover rules.',
-        type=str
-    )
-    parser.add_argument(
         '-z',
         '--zskroll',
         help='Rollover ZSK on provided interval and re-sign interval.',
