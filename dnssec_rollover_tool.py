@@ -24,7 +24,6 @@ import os
 import re
 from pathlib import Path
 from datetime import datetime, timedelta
-from configparser import RawConfigParser
 import locale
 from subprocess import (call, check_output, Popen, PIPE, DEVNULL,
         CalledProcessError)
