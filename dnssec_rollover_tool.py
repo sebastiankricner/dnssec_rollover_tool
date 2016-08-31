@@ -513,18 +513,18 @@ class DNSSECRollover():
                         self.resign_interval +
                         ds_ttl)
 
-def warning(message, exitcode = None):
+def warning(message, errno = None):
     '''Print warning message'''
-    if exitcode:
-        print("[warning]: "+message+': '+os.strerror(exitcode), file=sys.stderr)
+    if errno:
+        print("[warning]: "+message+': '+os.strerror(errno), file=sys.stderr)
     else:
         print("[warning]: "+message, file=sys.stderr)
 
-def error(message, exitcode = None):
+def error(message, errno = None):
     '''Print error message and exit'''
-    if exitcode:
-        print("[error]: "+message+': '+os.strerror(exitcode), file=sys.stderr)
-        sys.exit(exitcode)
+    if errno:
+        print("[error]: "+message+': '+os.strerror(errno), file=sys.stderr)
+        sys.exit(errno)
     else:
         print("[error]: "+message, file=sys.stderr)
     sys.exit(1)
