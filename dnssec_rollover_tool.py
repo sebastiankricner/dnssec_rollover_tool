@@ -268,7 +268,7 @@ class DNSSECRollover():
     def check_new_key_generation(self):
         '''Check whether a new key is required to be generated'''
         prepublish_time = self.calculate_time()
-        dnssec_keys = self.filter_sort_keys('activated published None')
+        dnssec_keys = self.filter_sort_keys('activated published created None')
         if self.keytype == 'zone' and prepublish_time:
             if dnssec_keys[-1].activate + prepublish_time < datetime.now():
                     return True
