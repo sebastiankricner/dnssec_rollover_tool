@@ -288,7 +288,7 @@ class DNSSECRollover():
             return
         if self.keytype == 'zone':
             if not(
-                self.dnssec_keys_filtered_sorted[-1].inactive or \
+                self.dnssec_keys_filtered_sorted[-1].inactive and \
                 self.dnssec_keys_filtered_sorted[-1].delete
             ):
                 if call(
@@ -397,7 +397,7 @@ class DNSSECRollover():
                         wanted = 'post_publish',
                         current_ksk = dnssec_keys[-1])
                 for dnssec_key in dnssec_keys[:-1]:
-                    if not (dnssec_key.inactive or dnssec_key.delete):
+                    if not (dnssec_key.inactive and dnssec_key.delete):
                         call([
                                 'dnssec-settime',
                                 '-I',
