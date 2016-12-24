@@ -391,16 +391,23 @@ class DNSSECRollover():
                         wanted = 'post_publish',
                         current_ksk = dnssec_keys[-1])
                 for dnssec_key in dnssec_keys[:-1]:
-                    call([
-                            'dnssec-settime',
-                            '-I',
-                            '+' + str(
-                                    int(prepublish_interval.total_seconds())),
-                            '-D',
-                            '+' + str(
-                                    int(postpublish_interval.total_seconds())),
-                            dnssec_key.keyfile,
-                        ], stdout=DEVNULL, stderr=DEVNULL)
+                    if not (dnssec_key.inactive or dnssec_key.delete):
+                        call([
+                                'dnssec-settime',
+                                '-I',
+                                '+' + str(
+                                        int(
+                                            prepublish_interval.total_seconds()
+                                        )
+                                    ),
+                                '-D',
+                                '+' + str(
+                                        int(
+                                            postpublish_interval.total_seconds()
+                                        )
+                                    ),
+                                dnssec_key.keyfile,
+                            ], stdout=DEVNULL, stderr=DEVNULL)
     def check_ksk_ds_email(self):
         '''If DS of latest published KSK or active KSK
         is not in DNS, send a E-Mail.'''
